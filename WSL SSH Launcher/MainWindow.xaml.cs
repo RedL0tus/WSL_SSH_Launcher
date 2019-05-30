@@ -166,9 +166,9 @@ namespace WSL_SSH_Launcher
     {
         public Internal inner;
         private XmlSerializer serializer = new XmlSerializer(typeof(Internal));
-        private static string basePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SSH_Launcher");
+        private static string basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SSH_Launcher");
         private static string fileName = "config.xml";
-        private static string savePath = System.IO.Path.Combine(basePath, fileName);
+        private static string savePath = Path.Combine(basePath, fileName);
         private Action<string> dataReceivedEventHandler;
         public BackgroundWorker worker;
 
@@ -365,14 +365,14 @@ namespace WSL_SSH_Launcher
 
         private void BrowseFilesButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(System.IO.Path.Combine(inner.inner.getChoosedDistro().BasePath), "rootfs");
+            Process.Start(Path.Combine(inner.inner.getChoosedDistro().BasePath), "rootfs");
         }
 
         private void SshdConfigButton_Click(object sender, RoutedEventArgs e)
         {
             // https://stackoverflow.com/a/4727164
-            var args = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "shell32.dll");
-            args += ",OpenAs_RunDLL " + System.IO.Path.Combine(inner.inner.getChoosedDistro().BasePath, "rootfs", "etc", "ssh", "sshd_config");
+            var args = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "shell32.dll");
+            args += ",OpenAs_RunDLL " + Path.Combine(inner.inner.getChoosedDistro().BasePath, "rootfs", "etc", "ssh", "sshd_config");
             Process.Start("rundll32.exe", args);
         }
 
@@ -420,7 +420,7 @@ namespace WSL_SSH_Launcher
                 }
             }
             inner.saveConfig();
-            Environment.Exit(0);
+            icon.Visible = false;
         }
 
         private void UserNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
