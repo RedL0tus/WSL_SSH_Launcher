@@ -1,0 +1,67 @@
+﻿<Window x:Class="WSL_SSH_Launcher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Closing="Window_Closing"
+        ResizeMode="CanMinimize"
+        Title="WSL SSH Launcher" Height="600" Width="400">
+    <Grid>
+        <DockPanel>
+            <StatusBar DockPanel.Dock="Bottom">
+                <StatusBarItem>
+                    <TextBlock Name="StatusStatusBar" Text="Initializing" />
+                </StatusBarItem>
+            </StatusBar>
+            <Grid>
+                <GroupBox x:Name="SettingsGroupBox" Header="Settings" HorizontalAlignment="Left" Height="160" VerticalAlignment="Top"  Width="370" Margin="10,0,0,0">
+                    <Grid>
+                        <StackPanel Orientation="Vertical" Margin="0,0,170,88">
+                            <Label Margin="0"
+                           Content="Distro:"
+                           Padding="5,5,5,1"
+                           Target="distroComboBox" />
+
+                            <ComboBox x:Name="distroComboBox"
+                              Margin="5,0,0,5"
+                              Padding="5,1,5,5"
+                              SelectedItem="Bla" SelectionChanged="DistroComboBox_SelectionChanged" />
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Margin="0,48,170,40">
+                            <Label Margin="0"
+                                   Content="Start with user:"
+                                   Padding="5,5,5,1"
+                                   FontFamily="monospace"
+                                   Target="distroComboBox" />
+
+                            <TextBox x:Name="userNameTextBox"
+                                     Margin="5,0,0,5"
+                                     Padding="5,1,5,5"
+                                     Text="root"
+                                     TextChanged="UserNameTextBox_TextChanged"
+                                     />
+                        </StackPanel>
+                        <CheckBox x:Name="checkBox" Content="Start on boot" HorizontalAlignment="Left" Margin="5,110,0,0" VerticalAlignment="Top" Checked="checkBox_Changed" Unchecked="checkBox_Changed"/>
+                        <Button x:Name="browseFilesButton" Margin="208,13,10,95" Click="BrowseFilesButton_Click" Content="Browse Files"/>
+                        <Button x:Name="sshdConfigButton" Margin="208,48,10,60" Click="SshdConfigButton_Click" Content="Edit sshd config"/>
+                        <Button x:Name="startButton" Margin="208,83,10,10" Click="StartButton_Click" Content="Start"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox x:Name="logGroupBox" Header="Log" HorizontalAlignment="Left" Height="372" VerticalAlignment="Top"  Width="370" Margin="10,165,0,0">
+                    <TextBox x:Name="loggingTextBlock"
+                             HorizontalAlignment="Left"
+                             TextWrapping="Wrap"
+                             Text=""
+                             Width="360"
+                             Height="351"
+                             IsReadOnly="True"
+                             VerticalAlignment="Top"
+                             Foreground="White"
+                             Background="Black"
+                             TextChanged="loggingTextBox_TextChanged" Margin="0,0,-2,-1"/>
+                </GroupBox>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Window>
