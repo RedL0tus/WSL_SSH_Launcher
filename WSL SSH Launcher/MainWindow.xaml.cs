@@ -273,11 +273,35 @@ namespace WSL_SSH_Launcher
 
         public MainWindow()
         {
+            void showWarning(string text)
+            {
+                MessageBox.Show(text, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+
             InitializeComponent();
 
-            inner = new InternalWrapper();
-            inner.saveConfig();
+            try
+            {
+                inner = new InternalWrapper();
+            } catch
+            {
+                showWarning("Failed to initialize, do you have a valid WSL installation?");
+            }
 
+            try
+            {
+                inner.saveConfig();
+            } catch
+            {
+                showWarning("Failed to save configuration");
+            }
+
+            // Quit if there are no valid WSL distribution found
+            if (inner.inner.getDistros().Length == 0)
+            {
+                showWarning("No valid WSL distribution found, quitting...");
+            }
 
             // Initialize distribution selector and display available distributions
             addToLog("Available distributions:");
