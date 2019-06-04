@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Windows;
 
 namespace WSL_SSH_Launcher
@@ -8,22 +9,38 @@ namespace WSL_SSH_Launcher
     /// </summary>
     public partial class App : Application
     {
-        private static Mutex _mutex = null;
+        private const string UniqueEventName = "8ecd7d80-37b0-4a77-a6c8-b1efc1bf9f06";
+        private const string UniqueMutexName = "df17a2ac-d53d-4b65-86b5-f790efa05315";
+        private EventWaitHandle eventWaitHandle;
+        private Mutex mutex;
 
-        protected override void OnStartup(StartupEventArgs e)
+        // https://stackoverflow.com/a/23730146
+        private void AppOnStartup(object sender, StartupEventArgs e)
         {
-            const string appName = "WSL_SSH_Launcher";
-            bool createdNew;
+            bool isOwned;
+            mutex = new Mutex(true, UniqueMutexName, out isOwned);
+            eventWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, UniqueEventName);
 
-            _mutex = new Mutex(true, appName, out createdNew);
+            GC.KeepAlive(mutex);
 
-            if (!createdNew)
+            if (isOwned)
             {
-                MessageBox.Show("Only one instance is allowed at a time");
-                Current.Shutdown();
+                var thread = new Thread(
+                    () =>
+                    {
+                        while (eventWaitHandle.WaitOne())
+                        {
+                            Current.Dispatcher.BeginInvoke((Action)(() => ((MainWindow)Current.MainWindow).BringToForeground()));
+                        }
+                    });
+                thread.IsBackground = true;
+                thread.Start();
+                return;
             }
 
-            base.OnStartup(e);
+            eventWaitHandle.Set();
+
+            Shutdown();
         }
     }
 }
